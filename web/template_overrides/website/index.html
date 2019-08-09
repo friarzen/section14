@@ -1,0 +1,89 @@
+{% extends "website/base.html" %}
+
+{% block titleblock %}Home{% endblock %}
+
+{% block header_ext %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col">
+    <div class="card">
+      <div class="card-body">
+        <h1 class="card-title">Section 14</h1>
+
+        <hr />
+
+        <p class="lead">
+          <div style="line-height: .6em" >
+          <div>....</div>
+          <div>....</div>
+          </div>
+          <div><span style="font-weight: bold" >Anomaly Detected</span><span> ... </span></div>
+          <div><span style="font-weight: bold" >Estimated Coordinates:</span><span> 40.738730, -73.987413, -20 Meters.</span></div>
+          <div><span style="font-weight: bold" >Prognostication Engine:</span><span> On-Line</span></div>
+          <div><span style="font-weight: bold" >Estimated Time Till Incursion:</span><span> 17 hours 2 minutes</span></div>
+          <div><span style="font-weight: bold" >Estimated Resolution Assets Required:</span><span> 6</span></div>
+          <div><span style="font-weight: bold" >Resolution Assets Available:</span><span> Insufficient</span></div>
+          <div>....</div>
+          <div><span style="font-weight: bold" >Contingency Asset Subsystem:</span><span> On-Line</span></div>
+          <div style="line-height: .6em" >
+          <div>.</div>
+          <div>..</div>
+          <div>...</div>
+          </div>
+          <div><span style="color: red;" >Soul Acquired</span><span>...</span></div>
+          <div style="font-weight: bold" >Formatting:</div>
+          <div style="line-height: .6em" >
+          <div>.</div>
+          <div>..</div>
+          <div>...</div>
+          </div>
+          <div style="font-weight: bold" >Implanting Geas:</div>
+          <div style="line-height: .6em" >
+          <div>.</div>
+          <div>..</div>
+          <div>...</div>
+          </div>
+          <div style="font-weight: bold" >Asset Indoctrination Commencing:</div>
+          <div>...Protocol1: Implanted</div>
+          <div>...Protocol2: Implanted</div>
+          <div>...Protocol3: Implanted</div>
+          <div>...<a href='/wiki'>WelcomeToSection14</a>: Implanted</div>
+          <div><span style="font-weight: bold" >Asset Acquisition Complete:</span><span> Resuming Resolution<span></div>
+          <div>...</div>
+          <div><span style="font-weight: bold" >Resolution Target Hosts Required:</span><span> 6<span></div>
+          <div>Downloading Resolution Assests to Hosts</div>
+          <div style="line-height: .6em" >
+          <div>.</div>
+          <div>..</div>
+          <div>...</div>
+          </div>
+          <div><span style="color: red;" > Target Host lost</span><span> ...<span></div>
+          <div>Verifying Resolution Asset ... Ghost Soul Recovery Complete.</div>
+          <div>Alternate Target Host Acquired ... Resuming Resolution Asset Downloads ...</div>
+          <div style="line-height: .6em" >
+          <div>....</div>
+          <div>.....</div>
+          <div>......</div>
+          </div>
+          <div>Download Complete...</div>
+          <div>Physical Assets onsite...</div>
+          <div style="font-weight: bold" ><span>Estimated Time Till Incursion:</span><span> 14 hours 53 minutes</span></div>
+          <div>....</div>
+          <div>You wake to full consciousness in your new Host...crap...a drug addict with the needle already prepped...</div>
+          <div>The extreme probability of an overdose would be an easy way out of the next 14 hours...if only Protocol 1 would let you...</div>
+        </p>
+          {% if webclient_enabled %}
+        <p>
+          <a href="{% url 'webclient:index' %}">Play Now</a><br>
+        </p>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr />
+
+{% endblock %}
