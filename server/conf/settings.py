@@ -34,6 +34,8 @@ from evennia.settings_default import *
 # This is the name of your game. Make it catchy!
 SERVERNAME = "Section 14"
 
+MULTISESSION_MODE=2
+
 INSTALLED_APPS += (
         # ...
         "evennia_wiki",

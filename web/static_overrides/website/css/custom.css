@@ -1,0 +1,29 @@
+body {
+    background-repeat: no-repeat;
+    background-position: bottom left;
+    background-image: url('/static/website/images/tentacles2.png');
+    background-color: #000;
+    color: #00ff33;
+}
+
+.nav-tabs .nav-link.active {
+    color: #fff;
+    background-color: #000;
+    border-color: #dee2e6 #dee2e6 #fff;
+}
+
+.breadcrumb {
+    display: none;
+}
+
+.card-header {
+    background-color: #000;
+}
+
+.card-body {
+    background-color: #000;
+}
+
+.card-footer {
+    background-color: #000;
+}

@@ -24,7 +24,7 @@
           <div><span style="font-weight: bold" >Prognostication Engine:</span><span> On-Line</span></div>
           <div><span style="font-weight: bold" >Estimated Time Till Incursion:</span><span> 17 hours 2 minutes</span></div>
           <div><span style="font-weight: bold" >Estimated Resolution Assets Required:</span><span> 6</span></div>
-          <div><span style="font-weight: bold" >Resolution Assets Available:</span><span> Insufficient</span></div>
+          <div><span style="font-weight: bold" >Resolution Assets Available:</span><span style="color: red;"> Insufficient</span></div>
           <div>....</div>
           <div><span style="font-weight: bold" >Contingency Asset Subsystem:</span><span> On-Line</span></div>
           <div style="line-height: .6em" >
@@ -46,9 +46,9 @@
           <div>...</div>
           </div>
           <div style="font-weight: bold" >Asset Indoctrination Commencing:</div>
-          <div>...Protocol1: Implanted</div>
-          <div>...Protocol2: Implanted</div>
-          <div>...Protocol3: Implanted</div>
+	  <div>...<a href='/wiki/Protocols'>Protocol1</a>: Implanted</div>
+	  <div>...<a href='/wiki/Protocols'>Protocol2</a>: Implanted</div>
+	  <div>...<a href='/wiki/Protocols'>Protocol3</a>: Implanted</div>
           <div>...<a href='/wiki'>WelcomeToSection14</a>: Implanted</div>
           <div><span style="font-weight: bold" >Asset Acquisition Complete:</span><span> Resuming Resolution<span></div>
           <div>...</div>
@@ -60,7 +60,8 @@
           <div>...</div>
           </div>
           <div><span style="color: red;" > Target Host lost</span><span> ...<span></div>
-          <div>Verifying Resolution Asset ... Ghost Soul Recovery Complete.</div>
+	  <div>Verifying Resolution Asset...</div>
+          <div>...Ghost Soul Recovery Complete.</div>
           <div>Alternate Target Host Acquired ... Resuming Resolution Asset Downloads ...</div>
           <div style="line-height: .6em" >
           <div>....</div>
@@ -75,8 +76,11 @@
           <div>The extreme probability of an overdose would be an easy way out of the next 14 hours...if only Protocol 1 would let you...</div>
         </p>
           {% if webclient_enabled %}
+        <h2>
+	  <a href="{% url 'webclient:index' %}">Play Now</a>
+        </h2>
         <p>
-          <a href="{% url 'webclient:index' %}">Play Now</a><br>
+          Or point your favorite client to port 4000.
         </p>
           {% endif %}
       </div>
