@@ -15,6 +15,9 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 """
 
 from evennia import default_cmds
+from paxboards.commands import add_board_commands
+from .roll import CmdRoll
+from .sheet import CmdSheet
 
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
@@ -33,6 +36,9 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         #
         # any commands you add below will overload the default ones.
         #
+        add_board_commands(self)
+        self.add(CmdRoll)
+        self.add(CmdSheet)
 
 
 class AccountCmdSet(default_cmds.AccountCmdSet):

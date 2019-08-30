@@ -12,6 +12,7 @@ from evennia.web.urls import urlpatterns
 # eventual custom patterns
 custom_patterns = [
     url(r'^wiki/', include('evennia_wiki.urls', namespace='wiki')),
+    url(r'^boards/', include('paxboards.urls')),
 ]
 
 # this is required by Django.

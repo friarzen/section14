@@ -39,6 +39,7 @@ MULTISESSION_MODE=2
 INSTALLED_APPS += (
         # ...
         "evennia_wiki",
+        "paxboards",
 )
 
 WIKI_CAN_READ = "anonymous"
