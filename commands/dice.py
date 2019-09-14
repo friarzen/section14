@@ -124,20 +124,20 @@ RE_MOD = re.compile(r"(\+|-|/|\*)")
 RE_COND = re.compile(r"(<|>|<=|>=|!=|==)")
 
 
-class CmdRoll(default_cmds.MuxCommand):
+class CmdDice(default_cmds.MuxCommand):
     """
     roll dice
 
     Usage:
-      roll[/switch] <nr>d<sides> [modifier] [success condition]
+      dice[/switch] <nr>d<sides> [modifier] [success condition]
 
     Switch:
       hidden - tell the room the roll is being done, but don't show the result
       secret - don't inform the room about neither roll nor result
 
     Examples:
-      roll 3d6 + 4
-      roll 1d100 - 2 < 50
+      dice 3d6 + 4
+      dice 1d100 - 2 < 50
 
     This will roll the given number of dice with given sides and modifiers.
     So e.g. 2d6 + 3 means to 'roll a 6-sided die 2 times and add the result,
@@ -151,15 +151,15 @@ class CmdRoll(default_cmds.MuxCommand):
     everyone but the person rolling.
     """
 
-    key = "roll"
-    aliases = ["dice",]
+    key = "dice"
+    aliases = []
     locks = "cmd:all()"
 
     def func(self):
         """Mostly parsing for calling the dice roller function"""
 
         if not self.args:
-            self.caller.msg("Usage: roll <nr>d<sides> [modifier] [conditional]")
+            self.caller.msg("Usage: dice <nr>d<sides> [modifier] [conditional]")
             return
         argstring = "".join(str(arg) for arg in self.args)
 

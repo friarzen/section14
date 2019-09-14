@@ -100,8 +100,7 @@ class Character(DefaultCharacter):
                            'hacking': 0,
                            'heavyarms': 0,
                            'infiltration': 0,
-                           'melee_humanoid': 0,
-                           'melee_nonhuman': 0,
+                           'melee': 0,
                            'medic': 0,
                            'piloting': 0,
                            'preparedness': 0,
@@ -127,8 +126,7 @@ class Character(DefaultCharacter):
                            'hacking': 0,
                            'heavyarms': 0,
                            'infiltration': 0,
-                           'melee_humanoid': 0,
-                           'melee_nonhuman': 0,
+                           'melee': 0,
                            'medic': 0,
                            'piloting': 0,
                            'preparedness': 0,
@@ -144,11 +142,24 @@ class Character(DefaultCharacter):
 
         self.db.health = 4
         self.db.sanity = 4
+        self.db.mana = 0
+        self.db.max_health = 4
+        self.db.max_sanity = 4
+        self.db.max_mana = 0
 
         self.db.to_be_hit_melee = 6
         self.db.to_be_hit_ranged = 6
+        self.db.to_be_hit_aetheric = 6
         self.db.armor_melee = 0
         self.db.armor_ballistic = 0
+        self.db.armor_aetheric = 0
+
+        self.db.exp = 50
+        self.db.ixp = 10
+        self.db.debt = 0
+        self.db.weapon = "fist"
+
+        self.db.chargen = True
 
 
     def sheet(self):
@@ -203,4 +214,201 @@ class Character(DefaultCharacter):
             text += f"{pad(i, width=20, align='l')}"
             text += f"{pad(a, width=20, align='l')}"
             text += f"{t}\n"
+        text += f"\n"
+        text += f"|whealth|n: {self.db.health}/{self.db.max_health}             "
+        text += f"|wsanity|n: {self.db.sanity}/{self.db.max_sanity}         "
+        text += f"|wmana|n: {self.db.mana}/{self.db.max_mana}           "
+        text += f"|wEXP|n: {self.db.exp}/{self.db.ixp}I"
+        if self.db.debt > 0:
+            text += f"/{self.db.debt}D"
+        text += f"\n"
+        text += f"|wTo-Be-Hit|n: {self.db.to_be_hit_melee}M/{self.db.to_be_hit_ranged}R/{self.db.to_be_hit_aetheric}A     "
+        text += f"|wArmor|n: {self.db.armor_melee}M/{self.db.armor_ballistic}B/{self.db.armor_aetheric}A     "
+        text += f"|wWeapon Equipped:    {self.db.weapon}|n\n"
         return text
+
+
+    def refresh(self, skillname, pips):
+        skills = self.db.gskills
+        pools = self.db.gpools
+
+        if( skillname not in pools ):
+            return f"{skillname} is not a refreshable pool."
+
+        if( pools[ skillname ] + pips > skills[ skillname ] ):
+            # we are trying to refresh a pool for more than its skill. reset pips.
+            pips = skills[ skillname ] - pools[ skillname ]
+
+        pools[ skillname ] += pips
+        self.db.gpools = pools
+
+        # TODO: announce to the room?
+        return f"{skillname} pool refreshed {pips} pips"
+
+
+    def roll(self, skillname, pipsspent):
+        skills = self.db.gskills
+        pools = self.db.gpools
+
+        if( skillname not in pools ):
+            return f"{skillname} is not a testable skill."
+
+        if( skills[ skillname ] <= 0 ):
+            # we are untrained in the skill and auto fail any test
+            # TODO: announce to the room?
+            return f"You are not trained in {skillname}, you automatically fail the challenge."
+
+        if( pipsspent > pools[skillname] ):
+            return f"You do not have {pipsspent} pips left to spend in the {skillname} pool."
+
+        if( pips > 0 ):
+            pools[skillname] -= pips
+            self.db.gpools = pools # save the spend back to the db
+
+        die1 = randrange(1,6,1)
+        die2 = randrange(1,6,1)
+
+        result = die1+die2+pips
+
+        # TODO: announce to the room?
+        return f"Result: {result}"
+
+
+    def spend(self, skillname, pipsspent):
+        skills = self.db.gskills
+        pools = self.db.gpools
+        found = False
+
+        if( pipsspent > self.db.exp ):
+            return f"You do not have {pipsspent} EXP to spend.  EXP spend cancelled."
+
+        if( skillname in skills ):
+            if( ((skillname == "sorcery") or (skillname == "heavyarms")) and (skills[skillname] == 0) ):
+                self.msg(f"{skillname} is an exotic skill.  The first pip will cost 8 exp.")
+                pipsspent += 7
+                if( (self.db.chargen is True) and (self.db.debt <= 0) ):
+                    return f"You do not have any chargen debt. To acquire debt, use the 'debt #exp' command.  Spend cancelled."
+                if( pipsspent > self.db.exp ):
+                    return f"You do not have {pipsspent} EXP to spend.  EXP spend cancelled."
+                skills[skillname] += pipsspent - 7
+                pools[skillname] += pipsspent - 7
+            else:
+                skills[skillname] += pipsspent
+                pools[skillname] += pipsspent
+            self.db.gskills = skills
+            self.db.gpools = pools
+            self.db.exp -= pipsspent
+            found = True
+        else:
+            if( skillname == "health" ):
+                self.db.max_health += pipsspent
+                self.db.health += pipsspent
+                self.db.exp -= pipsspent
+                found = True
+            if( skillname == "sanity" ):
+                self.db.max_sanity += pipsspent
+                self.db.sanity += pipsspent
+                self.db.exp -= pipsspent
+                found = True
+            if( skillname == "mana" ):
+                self.db.max_mana += pipsspent
+                self.db.mana += pipsspent
+                self.db.exp -= pipsspent
+                found = True
+
+        if( found is False ):
+            return f"{skillname} unknown. Spend XP on what?"
+
+        return self.sheet()
+
+
+    def ispend(self, skillname):
+        if( self.db.chargen is True ):
+            if( self.db.ixp <= 0 ):
+                return f"You have already allocated your 10 starting ISkills, maybe refund something?"
+
+            if( skillname in self.db.interpersonal and self.db.interpersonal[skillname] == 0 ):
+                self.db.interpersonal[skillname] = 1
+                self.db.ixp -= 1
+            if( skillname in self.db.academic and self.db.academic[skillname] == 0 ):
+                self.db.academic[skillname] = 1
+                self.db.ixp -= 1
+            if( skillname in self.db.technical and self.db.technical[skillname] == 0 ):
+                self.db.technical[skillname] = 1
+                self.db.ixp -= 1
+        else:
+            if( self.db.exp < 8 ):
+                return f"You do not have 8 EXP to spend to buy a new Investigative Skill."
+
+            self.db.exp -= 8
+
+        return self.sheet()
+
+
+    def refund(self, skillname):
+        # only valid during chargen
+        if( self.db.chargen is False ):
+            raise Exception('how did we get here? https://xkcd.com/2200/')
+
+        skills = self.db.gskills
+        pools = self.db.gpools
+
+        if( skillname in skills ):
+            pips = skills[skillname]
+            if( skillname == "sorcery" or skillname == "heavyarms" ):
+                pips += 7
+
+            skills[skillname] = 0
+            pools[skillname] = 0
+            self.db.gskills = skills
+            self.db.gpools = pools
+            self.db.exp += pips
+        else:
+            if( skillname == "health" ):
+                pips = self.db.max_health - 4
+                self.db.max_health = 4
+                self.db.health = 4
+                self.db.exp += pips
+            if( skillname == "sanity" ):
+                pips = self.db.max_sanity - 4
+                self.db.max_sanity = 4
+                self.db.sanity = 4
+                self.db.exp += pips
+            if( skillname == "mana" ):
+                pips = self.db.max_mana 
+                self.db.max_mana = 0
+                self.db.mana = 0
+                self.db.exp += pips
+
+            if( skillname in self.db.interpersonal and self.db.interpersonal[skillname] > 0 ):
+                self.db.interpersonal[skillname] = 0
+                self.db.ixp += 1
+            if( skillname in self.db.academic and self.db.academic[skillname] > 0 ):
+                self.db.academic[skillname] = 0
+                self.db.ixp += 1
+            if( skillname in self.db.technical and self.db.technical[skillname] > 0 ):
+                self.db.technical[skillname] = 0
+                self.db.ixp += 1
+
+        return self.sheet()
+
+
+    def debt(self, debt):
+        # only valid during chargen
+        if( self.db.chargen is False ):
+            raise Exception('how did we get here? https://xkcd.com/2200/')
+
+        self.db.exp += debt
+        self.db.debt += debt
+
+        return self.sheet()
+
+
+    def finalize(self, debt):
+        # only valid during chargen
+        if( self.db.chargen is False ):
+            raise Exception('how did we get here? https://xkcd.com/2200/')
+
+        self.db.chargen = False
+
+        return "Character Finalized"
