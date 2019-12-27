@@ -44,7 +44,7 @@ MULTISESSION_MODE=2
 
 INSTALLED_APPS += (
         # ...
-        "evennia-wiki",
+        "evennia_wiki",
         "paxboards",
 )
 
