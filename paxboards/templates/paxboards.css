@@ -119,6 +119,7 @@ a.paxboards-link:active {
 	width: 95%;
 	margin-left: 2.5%;
 	margin-right: 2.5%;
+	background-color: lightgray;
 	font-size: 12pt;
 	padding: 4px;
 	margin-bottom: 8px;
@@ -140,6 +141,7 @@ a.paxboards-link:active {
 	padding-top: 2px;
 	padding-bottom: 2px;
 	padding-left: 4px;
+	background-color: lightgray;
 }
 
 .paxboards-postinfo {

@@ -9,7 +9,9 @@ creation commands.
 """
 from evennia import DefaultCharacter
 from evennia.utils import pad
-
+from random import randint
+from typeclasses.objects import Weapon
+from evennia.utils.ansi import ANSIString
 
 class Character(DefaultCharacter):
     """
@@ -157,7 +159,7 @@ class Character(DefaultCharacter):
         self.db.exp = 50
         self.db.ixp = 10
         self.db.debt = 0
-        self.db.weapon = "fist"
+        self.db.weapon = Weapon()
 
         self.db.chargen = True
 
@@ -190,17 +192,17 @@ class Character(DefaultCharacter):
             if x < len(keys_i):
                 i = keys_i[x]
                 if( ipersonal[i] > 0 ):
-                   i = f"|w{keys_i[x]}|n"
+                   i = ANSIString( f"|w{keys_i[x]}|n" )
 
             if x < len(keys_a):
                 a = keys_a[x]
                 if( academic[a] > 0 ):
-                    a = f"|w{keys_a[x]}|n"
+                    a = ANSIString( f"|w{keys_a[x]}|n" )
 
             if x < len(keys_t):
                 t = keys_t[x]
                 if( technical[t] > 0 ):
-                    t = f"|w{keys_t[x]}|n"
+                    t = ANSIString( f"|w{keys_t[x]}|n" )
 
             if x < len(keys_g):
                 g = keys_g[x]
@@ -210,7 +212,8 @@ class Character(DefaultCharacter):
                 p = keys_p[x]
                 pval = gpools[p]
 
-            text += f"|w{pad(keys_g[x],width=16,align='l')}|n {pval}/{gval}    "
+            text += f"|w{pad(ANSIString(keys_g[x]), width=17, align='l')}|n"
+            text += f"{pad(ANSIString(str(pval)), width=3, align='r')}/{gval}  "
             text += f"{pad(i, width=20, align='l')}"
             text += f"{pad(a, width=20, align='l')}"
             text += f"{t}\n"
@@ -222,9 +225,10 @@ class Character(DefaultCharacter):
         if self.db.debt > 0:
             text += f"/{self.db.debt}D"
         text += f"\n"
-        text += f"|wTo-Be-Hit|n: {self.db.to_be_hit_melee}M/{self.db.to_be_hit_ranged}R/{self.db.to_be_hit_aetheric}A     "
-        text += f"|wArmor|n: {self.db.armor_melee}M/{self.db.armor_ballistic}B/{self.db.armor_aetheric}A     "
-        text += f"|wWeapon Equipped:    {self.db.weapon}|n\n"
+        text += f"\n"
+        text += f"|wTo-Be-Hit|n: {self.db.to_be_hit_melee} Melee / {self.db.to_be_hit_ranged} Ranged / {self.db.to_be_hit_aetheric} Aetheric    "
+        text += f"|wWeapon Equipped:    {self.db.weapon.key}|n\n"
+        text += f"|wArmor|n:     {self.db.armor_melee} Melee / {self.db.armor_ballistic} Ranged / {self.db.armor_aetheric} Aetheric\n"
         return text
 
 
@@ -255,22 +259,23 @@ class Character(DefaultCharacter):
 
         if( skills[ skillname ] <= 0 ):
             # we are untrained in the skill and auto fail any test
-            # TODO: announce to the room?
+            self.location.msg_contents( text=f"{self.key} attempts {skillname}... Result: untrained failure." )
             return f"You are not trained in {skillname}, you automatically fail the challenge."
 
         if( pipsspent > pools[skillname] ):
             return f"You do not have {pipsspent} pips left to spend in the {skillname} pool."
 
-        if( pips > 0 ):
-            pools[skillname] -= pips
+        if( pipsspent > 0 ):
+            pools[skillname] -= pipsspent
             self.db.gpools = pools # save the spend back to the db
 
-        die1 = randrange(1,6,1)
-        die2 = randrange(1,6,1)
+        die1 = randint(1,6)
+        die2 = randint(1,6)
 
-        result = die1+die2+pips
+        result = die1+die2+pipsspent
 
-        # TODO: announce to the room?
+        self.location.msg_contents( text=f"{self.key} attempts {skillname}... Result: {result}" )
+
         return f"Result: {result}"
 
 

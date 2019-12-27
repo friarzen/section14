@@ -1,10 +1,14 @@
 """
 Manage a Character Sheet via caller->sheet caller->spend and caller->exp
 """
-from evennia import default_cmds
 import re
+from django.conf import settings
+from evennia.utils import class_from_module
 
-class CmdSheet(default_cmds.MuxCommand):
+COMMAND_DEFAULT_CLASS = class_from_module(settings.COMMAND_DEFAULT_CLASS)
+
+
+class CmdSheet(COMMAND_DEFAULT_CLASS):
     """
     Print out your Character skill sheet
 
@@ -22,7 +26,7 @@ class CmdSheet(default_cmds.MuxCommand):
 
 
 
-class CmdRoll(default_cmds.MuxCommand):
+class CmdRoll(COMMAND_DEFAULT_CLASS):
     """
     Roll/Use a skill.  Optionally, 'Spend' a number of pips from that
     Skill's Pool to add +1/per-pip to the dice roll.
@@ -52,7 +56,7 @@ class CmdRoll(default_cmds.MuxCommand):
 
 
 
-class CmdSpend(default_cmds.MuxCommand):
+class CmdSpend(COMMAND_DEFAULT_CLASS):
     """
     Spend EXP to buy/advance a skill, health, sanity, or mana permanently
     on a one-for-one basis.
@@ -85,7 +89,7 @@ class CmdSpend(default_cmds.MuxCommand):
 
 
 
-class CmdRefund(default_cmds.MuxCommand):
+class CmdRefund(COMMAND_DEFAULT_CLASS):
     """
     Reset any skill, health, sanity, or mana spends back to their default value.
     Usable only during character generation.
@@ -108,7 +112,7 @@ class CmdRefund(default_cmds.MuxCommand):
 
 
 
-class CmdDebt(default_cmds.MuxCommand):
+class CmdDebt(COMMAND_DEFAULT_CLASS):
     """
     Buy Debt EXP (minimum 8).  Unlocks the exotic skills: sorcery and heavyarms
     Usable only during character generation.
@@ -132,7 +136,7 @@ class CmdDebt(default_cmds.MuxCommand):
 
 
 
-class CmdFinalize(default_cmds.MuxCommand):
+class CmdFinalize(COMMAND_DEFAULT_CLASS):
     """
     Complete your character generation.
 

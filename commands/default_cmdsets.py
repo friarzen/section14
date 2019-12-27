@@ -18,6 +18,7 @@ from evennia import default_cmds
 from paxboards.commands import add_board_commands
 from .dice import CmdDice
 from .sheet import CmdSheet, CmdRoll, CmdSpend, CmdRefund, CmdDebt, CmdFinalize
+from .comms import MyCmdChannelCreate, MyCmdCdestroy
 
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
@@ -63,6 +64,8 @@ class AccountCmdSet(default_cmds.AccountCmdSet):
         #
         # any commands you add below will overload the default ones.
         #
+        self.add(MyCmdChannelCreate)
+        self.add(MyCmdCdestroy)
 
 
 class UnloggedinCmdSet(default_cmds.UnloggedinCmdSet):

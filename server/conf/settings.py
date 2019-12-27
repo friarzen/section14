@@ -34,21 +34,27 @@ from evennia.settings_default import *
 # This is the name of your game. Make it catchy!
 SERVERNAME = "Section 14"
 
+DEBUG=True
+
 LOCKDOWN_MODE=False
 WEBSERVER_INTERFACES = ['127.0.0.1']
 WEBSOCKET_CLIENT_INTERFACE = '127.0.0.1'
-WEBSOCKET_CLIENT_URL="wss://section14.eridanisystems.com:4002/"
 
 MULTISESSION_MODE=2
 
 INSTALLED_APPS += (
         # ...
-        "evennia_wiki",
+        "evennia-wiki",
         "paxboards",
 )
 
 WIKI_CAN_READ = "anonymous"
 WIKI_CAN_WRITE = "builder"
+
+WEBCLIENT_LAYOUT="""
+{
+}
+"""
 
 ######################################################################
 # Settings given in secret_settings.py override those in this file.
